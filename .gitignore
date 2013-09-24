@@ -1,0 +1,8 @@
+*.pyc
+*.pyo
+*.swp
+*.swo
+code/autowb/local_settings.py
+code/autowb/log
+media/uploads
+.DS_Store
