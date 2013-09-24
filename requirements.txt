@@ -1,0 +1,3 @@
+Django==1.5
+pymongo==2.0.1
+-e git+git://github.com/amyangfei/django-social-auth#egg=django-social-auth

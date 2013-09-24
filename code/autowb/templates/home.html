@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% load url from future %}
+
+{% block content %}
+Welcome back home!
+
+{{ user.username }}
+
+<a href="{% url 'logout' %}">Logout</a>
+{% endblock %}

@@ -1,0 +1,7 @@
+{% extends 'base.html' %}
+{% load url from future %}
+
+{% block content %}
+Hello!
+<a href="{% url 'socialauth_begin' "weibo" %}" class="">通过微博登录</a>
+{% endblock %}

@@ -1,0 +1,30 @@
+# coding: utf-8
+
+DEBUG = True
+TEMPLATE_DEBUG = DEBUG
+
+DOMAIN = 'http://localhost:8000'
+# DOMAIN = 'http://www.test.com'
+
+MEDIA_URL = DOMAIN + '/media/'
+# MEDIA_URL = DOMAIN + ':8000/media/'
+
+
+#################
+# Custom settings
+#################
+
+MONGODB_HOST = 'localhost'
+MONGODB_PORT = 27017
+MONGODB_NAME = 'autowb'
+
+
+#####################
+# social auth related
+#####################
+
+OAUTH_DEBUG = False
+# OAUTH_DEBUG = True
+
+WEIBO_CLIENT_KEY = ''
+WEIBO_CLIENT_SECRET = ''
