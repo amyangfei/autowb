@@ -207,6 +207,7 @@ SOCIAL_AUTH_PIPELINE = (
     # 'account.pipeline.share',
     # 'account.pipeline.avatar',
     # 'account.pipeline.random_recommend',
+    'account.pipeline.avatar',
     'social_auth.backends.pipeline.social.associate_user',
     'social_auth.backends.pipeline.social.load_extra_data',
     #'social_auth.backends.pipeline.user.update_user_details',

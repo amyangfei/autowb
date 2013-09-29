@@ -2,8 +2,12 @@
 import hashlib
 import random
 import datetime
+import time
+
+from weibo import APIClient
 
 from autowb.db import Model, get_db
+from autowb.utils.images import ImageUtils
 
 db = get_db()
 
@@ -11,7 +15,6 @@ db = get_db()
 class User(Model):
     fields = [
         '_id',
-        # 'pk',
         'username',
         'password',
         'is_staff',
@@ -55,8 +58,53 @@ class User(Model):
         except:
             return None
 
-    def _update(self, doc):
-        self.get_collection().update({'_id': self.id}, {'$set': doc})
+    def get_social_user(self, provider='weibo'):
+        from social_models import UserSocialAuth
+        social_users = UserSocialAuth.find({'user_id': self.id, 'provider': provider})
+        if social_users.count():
+            return social_users[0]
+        return None
+
+    def _get_access_token(self, provider="weibo"):
+        social_user = self.get_social_user(provider)
+        if not social_user:
+            return None
+        token = social_user.extra_data.get("access_token", "")
+        expires_date = social_user.extra_data.get("expires_in", datetime.datetime.now())
+        expires = time.mktime(expires_date.timetuple())
+        return token, expires
+
+    def get_api(self, provider="weibo"):
+        social_user = self.get_social_user(provider)
+        if not social_user:
+            return None
+        api = None
+        if provider == 'weibo':
+            api = APIClient(app_key="", app_secret="")
+        token, expires = self._get_access_token(provider)
+        api.set_access_token(access_token=token, expires=expires)
+        return api
+
+    def update_weibo(self, wb_cnt):
+        client = self.get_api()
+        if not client:
+            return None
+        ret = None
+        try:
+            if wb_cnt.image_uri:
+                img_type, img_data = ImageUtils.get_image_data(wb_cnt.image_uri)
+                if img_type == 'http':
+                    ret = client.statuses.upload_url_text.post(status=wb_cnt.text, url=img_data)
+                elif img_type == 'local':
+                    ret = client.statuses.upload.post(status=wb_cnt.text, pic=img_data)
+                    img_data.close()
+            else:
+                print wb_cnt.text
+                ret = client.statuses.update.post(status=wb_cnt.text)
+            wb_cnt.do_sent()
+        except Exception, e:
+            ret = e
+        return ret
 
     def __eq__(self, other):
         return self.id == other.id

@@ -20,4 +20,6 @@ urlpatterns = patterns(
 
     url(r'social/', include('social_auth.urls')),
 
+    # send test
+    url(r'^send/test$', 'views.send_test', {'template': 'sent.html'}, name='send_test'),
 )

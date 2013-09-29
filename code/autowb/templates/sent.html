@@ -2,12 +2,16 @@
 {% load url from future %}
 
 {% block content %}
-Welcome home!
+Welcome back home!
 
 {{ user.username }}
+
+<a href="{% url 'home' %}">Home</a>
 
 <br><br>
 <a href="{% url 'logout' %}">Logout</a>
 &nbsp;
 <a href="{% url 'send_test' %}">Send Weibo Test</a>
+<br><br>
+{{ ret }}
 {% endblock %}
