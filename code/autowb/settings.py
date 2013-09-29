@@ -131,6 +131,7 @@ INSTALLED_APPS = (
     # 'django.contrib.admindocs',
     'account',
     'social_auth',
+    'cron',
 )
 
 # A sample logging configuration. The only tangible logging
