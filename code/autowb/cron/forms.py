@@ -15,13 +15,49 @@ _MIN_TIME_DELTA = 1
 
 
 def _send_weibo(user, wb_cnt):
-    user.update_weibo(wb_cnt)
+    return user.update_weibo(wb_cnt)
 
 
 def _add_scehduler(callback, user, wb_cnt):
     scheduler = get_scheduler()
     scheduler.add_date_job(callback, date=wb_cnt.push_date, args=[user, wb_cnt, ])
     # scheduler.add_cron_job(callback, hour='0-23', minute='0-59', second='30', args=['world'])
+
+
+class TestForm(forms.Form):
+    text = forms.CharField(
+        label=u'weibo text',
+        widget=forms.Textarea(),
+        required=False,
+    )
+    image = forms.ImageField(
+        label=u'图片',
+        widget=forms.ClearableFileInput(attrs={'class': 'input-h'}),
+        required=False,
+    )
+
+    def clean(self):
+        cd = super(TestForm, self).clean()
+        errors = []
+        if not cd.get('text'):
+            errors.append(u'您必须说点什么')
+        if errors:
+            raise forms.ValidationError(errors)
+        return cd
+
+    def save(self, user):
+        cd = self.cleaned_data
+
+        image_uri = ImageUtils.handle_weibo_image(cd['image']) if cd['image'] else None
+
+        wb_cnt = WeiboContent.create(
+            user_id=user.id,
+            username=user.username,
+            text=cd['text'],
+            push_date=datetime.datetime.now(),
+            image_uri=image_uri,
+        )
+        return _send_weibo(user, wb_cnt)
 
 
 class CronForm(forms.Form):

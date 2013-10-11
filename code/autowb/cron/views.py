@@ -10,16 +10,20 @@ from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 
 from autowb.cron.models import WeiboContent
-from autowb.cron.forms import CronForm
+from autowb.cron.forms import CronForm, TestForm
 
 
 @login_required
 def send_test(request, template):
-    from time import time
-    t_str = str(time())
-    wb_cnt = WeiboContent.create(text='test weibo from autowb '+t_str)
-    ret = request.user.update_weibo(wb_cnt)
+    ret = None
+    if request.method == 'POST':
+        form = TestForm(request.POST, request.FILES)
+        if form.is_valid():
+            ret = form.save(request.user)
+    else:
+        form = TestForm()
     return render_to_response(template, {
+        'form': form,
         'ret': ret
     }, context_instance=RequestContext(request))
 
