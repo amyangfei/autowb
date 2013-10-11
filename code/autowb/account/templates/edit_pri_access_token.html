@@ -2,7 +2,7 @@
 
 {% block content %}
 
-Send Weibo Test
+Edit Priority Access Token
 
 {{ user.username }}
 
@@ -21,15 +21,9 @@ Send Weibo Test
 </div>
 
 <br><br>
-<form id="test_form" action="{% url 'send_test' %}" enctype="multipart/form-data" method="post">{% csrf_token %}
+<form id="test_form" action="{% url 'edit_pri_access_token' %}" enctype="multipart/form-data" method="post">{% csrf_token %}
   {{ form.as_ul }}<br>
-  <input type="submit" value="Send Immediately" />
+  <input type="submit" value="Change Now" />
 </form>
-
-{% if ret %}
-  <h2>Send Result</h2>
-  <br><br> 
-  {{ ret }}
-{% endif %}
 
 {% endblock %}

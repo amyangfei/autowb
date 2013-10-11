@@ -20,6 +20,7 @@ class UserSocialAuth(Model, UserSocialAuthMixin):
         'provider',
         'uid',  # each model should have an uri method to get direct to resource view
         'extra_data',
+        'priority_data',  # high priority, special useage
     ]
 
     def _set_user(self, user):

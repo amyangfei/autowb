@@ -7,4 +7,5 @@ urlpatterns = patterns(
     url(r'^logout$', 'logout', name="logout"),
     url(r'^user_settings$', 'user_settings', {'template': 'user_settings.html'}, name='user_settings'),
     url(r'^signup/done$', 'signup_done', {'template': 'signup_done.html'}, name="signup_done"),
+    url(r'^priority_access_token/edit$', 'edit_pri_access_token', {'template': 'edit_pri_access_token.html'}, name="edit_pri_access_token"),
 )

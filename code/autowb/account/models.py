@@ -69,7 +69,9 @@ class User(Model):
         social_user = self.get_social_user(provider)
         if not social_user:
             return None
-        token = social_user.extra_data.get("access_token", "")
+        token = social_user.priority_data.get('access_token') if hasattr(social_user, 'priority_data') else None
+        if not token:
+            token = social_user.extra_data.get("access_token", "")
         expires_date = social_user.extra_data.get("expires_in", datetime.datetime.now())
         expires = time.mktime(expires_date.timetuple())
         return token, expires
@@ -104,6 +106,24 @@ class User(Model):
         except Exception, e:
             ret = e
         return ret
+
+    def get_priority_data(self, provider="weibo"):
+        social_user = self.get_social_user(provider)
+        if not social_user:
+            return None
+        if not social_user.priority_data:
+            return {}
+        return social_user.priority_data
+
+    def update_priority_data(self, provider="weibo", **kwargs):
+        social_user = self.get_social_user(provider)
+        if not social_user:
+            return None
+        if not social_user.priority_data:
+            social_user.priority_data = {}
+        social_user.priority_data.update(kwargs)
+        social_user.save()
+        return social_user
 
     def __eq__(self, other):
         return self.id == other.id
