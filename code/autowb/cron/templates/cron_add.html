@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+Add Weibo Cron
+
+{{ user.username }}
+
+<a href="{% url 'home' %}">Home</a>
+&nbsp;
+<a href="{% url 'logout' %}">Logout</a>
+
+<div class="btn-box">
+  {% if messages %}
+    <ul class="messages">
+      {% for message in messages %}
+        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+</div>
+
+<br><br>
+<form id="entry_form" action="{% url 'cron_add' %}" enctype="multipart/form-data" method="post">{% csrf_token %}
+  {{ form.as_ul }}<br>
+  <input type="submit" value="add to cron" />
+</form>
+
+<br><br>
+Newest Added Cron
+{% for cron in recent_cron %}
+<li>text: {{ cron.text }}</li>
+<li>image_uri: {{ cron.image_uri }}</li>
+<li>push date: {{ cron.push_date }}</li>
+
+
+{% endfor %}
+
+{% endblock %}

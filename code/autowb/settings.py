@@ -37,6 +37,8 @@ ALLOWED_HOSTS = []
 # In a Windows environment this must be set to your system time zone.
 TIME_ZONE = 'Asia/Shanghai'
 
+DATE_FORMAT = 'Y m d'
+
 # Language code for this installation. All choices can be found here:
 # http://www.i18nguy.com/unicode/language-identifiers.html
 LANGUAGE_CODE = 'en-us'
@@ -49,7 +51,7 @@ USE_I18N = True
 
 # If you set this to False, Django will not format dates, numbers and
 # calendars according to the current locale.
-USE_L10N = True
+USE_L10N = False
 
 # If you set this to False, Django will not use timezone-aware datetimes.
 USE_TZ = True

@@ -1,12 +1,16 @@
 # coding: utf-8
 
-from django.http import HttpResponseRedirect
+import datetime
+
 from django.shortcuts import render_to_response
 from django.template import RequestContext
-from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from django.http import HttpResponseRedirect
+from django.core.urlresolvers import reverse
 
-from autowb.utils.models import WeiboContent
+from autowb.cron.models import WeiboContent
+from autowb.cron.forms import CronForm
 
 
 @login_required
@@ -23,17 +27,18 @@ def send_test(request, template):
 @login_required
 def cron_add(request, template):
     if request.method == 'POST':
-        form = EventCreationForm(request.POST, request.FILES)
+        form = CronForm(request.POST, request.FILES)
         if form.is_valid():
             form.save(request.user)
-            request.session['ga_event_created_'] = True
-            return HttpResponseRedirect(reverse('events'))
+            messages.success(request, u'添加推送微博任务成功')
+            return HttpResponseRedirect(reverse('cron_add'))
     else:
-        now = datetime.datetime.now()
-        form = EventCreationForm(initial={
-            'start_time': now,
-            'end_time': now+datetime.timedelta(days=30)
-        })
+        s_date = datetime.datetime.now() + datetime.timedelta(minutes=5)
+        form = CronForm(initial={'send_date': s_date, 'hour': s_date.hour, 'minute': s_date.minute})
+
+    recent_cron = WeiboContent.find({'user_id': request.user.id}, sort=[('created', -1)], limit=1)
+
     return render_to_response(template, {
-        'form': form
+        'form': form,
+        'recent_cron': recent_cron,
     }, context_instance=RequestContext(request))

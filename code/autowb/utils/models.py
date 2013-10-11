@@ -8,39 +8,7 @@ from StringIO import StringIO
 
 from django.core.files.storage import default_storage
 
-from autowb.db import Model, get_db
-
-db = get_db()
-
-
-class WeiboContent(Model):
-    fields = [
-        '_id',
-        'push_date',
-        'created',
-        'text',
-        'image_uri',
-        'user_id',
-        'sent',
-        'sent_time',
-    ]
-
-    @classmethod
-    def create(cls, **kw):
-        data = kw.copy()
-        now = datetime.datetime.now()
-        data.update({'created': now, 'sent': False})
-        wb_cnt = WeiboContent(data)
-        wb_cnt.save()
-        return wb_cnt
-
-    def get_user(self):
-        return db.user.find_one({'_id': self.user_id})
-
-    def do_sent(self):
-        self.sent = True
-        self.sent_time = datetime.datetime.now()
-        self.save()
+from autowb.db import Model
 
 
 class ImageFileRepo(Model):
@@ -95,8 +63,8 @@ class ImageData(ImageDataBase):
         self.original = ''
         self.format = image.format
 
-    def save(self, path, rawdata):
-        self.path = default_storage.save(path, rawdata)
+    def save(self, path):
+        self.path = default_storage.save(path, self.rawdata)
 
         model = ImageFileRepo({
             'name': path,
@@ -104,6 +72,7 @@ class ImageData(ImageDataBase):
             'meta': '',
             'original': self.original,
             'versions': [],
+            'created': datetime.datetime.now()
         })
         model.save()
         return self.path

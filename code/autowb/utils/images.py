@@ -14,7 +14,7 @@ class ImageUtils(object):
     @staticmethod
     def _save_raw(rawdata, path, modifier=None):
         image = ImageData(rawdata)
-        image.save_with_random_name(path, modifier)
+        return image.save_with_random_name(path, modifier)
 
     @staticmethod
     def handle_weibo_image(rawdata):
@@ -26,6 +26,13 @@ class ImageUtils(object):
             return 'http', image_uri
         return 'local', default_storage.open(image_uri)
 
+    @classmethod
+    def is_image_exists(image_uri):
+        if image_uri.startswith('http'):
+            # to be supported later
+            return True
+        else:
+            return default_storage.exists(default_storage.path(image_uri))
 
     # @staticmethod
     # def delete(image_uri):

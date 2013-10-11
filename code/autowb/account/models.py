@@ -99,7 +99,6 @@ class User(Model):
                     ret = client.statuses.upload.post(status=wb_cnt.text, pic=img_data)
                     img_data.close()
             else:
-                print wb_cnt.text
                 ret = client.statuses.update.post(status=wb_cnt.text)
             wb_cnt.do_sent()
         except Exception, e:
