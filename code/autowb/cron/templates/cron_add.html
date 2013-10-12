@@ -29,11 +29,13 @@ Add Weibo Cron
 <br><br>
 Newest Added Cron
 {% for cron in recent_cron %}
-<li>text: {{ cron.text }}</li>
-<li>image_uri: {{ cron.image_uri }}</li>
-<li>push date: {{ cron.push_date }}</li>
-
-
+  <li>text: {{ cron.text }}</li>
+  <li>image_uri: {{ cron.image_uri }}</li>
+  <li>push date: {{ cron.push_date }}</li>
 {% endfor %}
+
+<br><br>
+<a href="{% url 'cron_unsent_list' %}"><b>待发列表</b></a>&nbsp;&nbsp;
+<a href="{% url 'cron_s_unsent_list' %}">apscheduler list(for validation, programmer use, not user use)</a>
 
 {% endblock %}

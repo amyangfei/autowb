@@ -134,6 +134,7 @@ INSTALLED_APPS = (
     'account',
     'social_auth',
     'cron',
+    'utils',
 )
 
 # A sample logging configuration. The only tangible logging

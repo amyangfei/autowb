@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% load tags_utils %}
+
+{% block content %}
+
+Cron Unsent List
+
+<br> Hello! {{ user.username }}
+
+<a href="{% url 'home' %}">Home</a>
+&nbsp;
+<a href="{% url 'logout' %}">Logout</a>
+&nbsp;
+<a href="{% url 'cron_add' %}">Back To Add Cron</a>
+
+<div class="btn-box">
+  {% if messages %}
+    <ul class="messages">
+      {% for message in messages %}
+        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+</div>
+
+{% for cron in unsent %}
+ <ul>
+  --------------------------------------------------------------------------------
+  <p>text: {{ cron.text }}</p>
+  <p>image_uri: {{ cron.image_uri }} {% if cron.image_uri %}<a href="{{ cron.image_uri|imgsrc }}" target="_blank">click to preview</a>{% endif %} </p>
+  <p>push date: {{ cron.push_date|date:'Y-m-d H:i:s' }}</p>
+  <form action="{% url 'cron_delete' cron.id %}" enctype="multipart/form-data" method="post" onsubmit="return confirm('确定删除么？');">{% csrf_token %}
+    <input type="submit" value="DELETE" />
+  </form>
+</ul>
+{% endfor %}
+<ul>--------------------------------------------------------------------------------</ul>
+
+{% endblock %}

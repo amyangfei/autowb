@@ -6,7 +6,7 @@ from django.forms.extras.widgets import SelectDateWidget
 
 from autowb.cron.models import WeiboContent
 from autowb.utils.images import ImageUtils
-from autowb.scheduler import get_scheduler
+from autowb.scheduler import get_scheduler, default_callback
 
 
 HOUR_CHOICES = [(x, x) for x in range(24)]
@@ -20,7 +20,7 @@ def _send_weibo(user, wb_cnt):
 
 def _add_scehduler(callback, user, wb_cnt):
     scheduler = get_scheduler()
-    scheduler.add_date_job(callback, date=wb_cnt.push_date, args=[user, wb_cnt, ])
+    scheduler.add_date_job(default_callback, date=wb_cnt.push_date, name=str(wb_cnt.id), args=[user, wb_cnt, ])
     # scheduler.add_cron_job(callback, hour='0-23', minute='0-59', second='30', args=['world'])
 
 
