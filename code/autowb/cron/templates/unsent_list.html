@@ -23,7 +23,7 @@ Cron Unsent List
   {% endif %}
 </div>
 
-{% for cron in unsent %}
+{% for cron in obj %}
  <ul>
   --------------------------------------------------------------------------------
   <p>text: {{ cron.text }}</p>
@@ -34,6 +34,9 @@ Cron Unsent List
   </form>
 </ul>
 {% endfor %}
+
 <ul>--------------------------------------------------------------------------------</ul>
+
+{% include "paginator.html" %}
 
 {% endblock %}

@@ -12,6 +12,7 @@ from django.core.urlresolvers import reverse
 from autowb.cron.models import WeiboContent
 from autowb.cron.forms import CronForm, TestForm
 from autowb.scheduler import get_scheduler
+from autowb.utils.tools import get_paginator
 
 
 @login_required
@@ -68,16 +69,18 @@ def cron_delete(request, wbcnt_id):
 
 @login_required
 def cron_unsent_list(request, template):
-    unsent = WeiboContent.find({'user_id': request.user.id, 'sent': False}, sort=[('push_date', 1)])
+    all_unsent = [x for x in WeiboContent.find({'user_id': request.user.id, 'sent': False}, sort=[('push_date', 1)])]
+    obj = get_paginator(request, all_unsent, 5)
     return render_to_response(template, {
-        'unsent': unsent,
+        'obj': obj,
     }, context_instance=RequestContext(request))
 
 
 @login_required
 def cron_s_unsent_list(request, template):
-    scheduler = get_scheduler()
-    scheduler_unsent = scheduler.get_jobs()
+    all_scheduler_unsent = get_scheduler().get_jobs()
+    all_scheduler_unsent.sort(key=lambda x: x.trigger.run_date)
+    obj = get_paginator(request, all_scheduler_unsent, 5)
     return render_to_response(template, {
-        'scheduler_unsent': scheduler_unsent,
+        'obj': obj,
     }, context_instance=RequestContext(request))
