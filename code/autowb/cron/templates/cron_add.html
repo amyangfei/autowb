@@ -35,7 +35,8 @@ Newest Added Cron
 {% endfor %}
 
 <br><br>
-<a href="{% url 'cron_unsent_list' %}"><b>待发列表</b></a>
+<a href="{% url 'cron_unsent_list' %}"><b>待发列表</b></a>&nbsp;&nbsp;
+<a href="{% url 'cron_sent_list' %}"><b>已发列表</b></a>
 {% comment %}
 &nbsp;&nbsp;
 <a href="{% url 'cron_s_unsent_list' %}">apscheduler list(for validation, programmer use, not user use)</a>

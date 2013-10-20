@@ -70,7 +70,16 @@ def cron_delete(request, wbcnt_id):
 @login_required
 def cron_unsent_list(request, template):
     all_unsent = [x for x in WeiboContent.find({'user_id': request.user.id, 'sent': False}, sort=[('push_date', 1)])]
-    obj = get_paginator(request, all_unsent, 5)
+    obj = get_paginator(request, all_unsent, 10)
+    return render_to_response(template, {
+        'obj': obj,
+    }, context_instance=RequestContext(request))
+
+
+@login_required
+def cron_sent_list(request, template):
+    all_unsent = [x for x in WeiboContent.find({'user_id': request.user.id, 'sent': True}, sort=[('push_date', -1)])]
+    obj = get_paginator(request, all_unsent, 10)
     return render_to_response(template, {
         'obj': obj,
     }, context_instance=RequestContext(request))
@@ -80,7 +89,7 @@ def cron_unsent_list(request, template):
 def cron_s_unsent_list(request, template):
     all_scheduler_unsent = get_scheduler().get_jobs()
     all_scheduler_unsent.sort(key=lambda x: x.trigger.run_date)
-    obj = get_paginator(request, all_scheduler_unsent, 5)
+    obj = get_paginator(request, all_scheduler_unsent, 10)
     return render_to_response(template, {
         'obj': obj,
     }, context_instance=RequestContext(request))
