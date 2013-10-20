@@ -68,8 +68,8 @@ class User(Model):
     def _get_access_token(self, provider="weibo"):
         social_user = self.get_social_user(provider)
         if not social_user:
-            return None
-        token = social_user.priority_data.get('access_token') if hasattr(social_user, 'priority_data') else None
+            return None, None
+        token = social_user.priority_data.get('access_token') if social_user.priority_data else None
         if not token:
             token = social_user.extra_data.get("access_token", "")
         expires_date = social_user.extra_data.get("expires_in", datetime.datetime.now())
